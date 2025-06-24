@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load custom_filters %}
+
+{% load static %}
+
+{% block title %}Données Revenus{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/incomes.js' %}"></script>
+
+<div class="container mt-4">
+
+  <!-- Formulaire dynamique -->
+  {% if form and form.instance.pk %}
+    <div id="income-form-container" style="display: block;">
+        {% include "dashboard/forms/incomes_form.html" %}
+    </div>
+  {% elif form %}
+    <div id="income-form-container" style="display: none;">
+        {% include "dashboard/forms/incomes_form.html" %}
+    </div>
+  {% else %}
+    <div id="income-form-container" style="display: none;"></div>
+  {% endif %}
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Historique des Revenus</h2>
+      <button id="add-new-income" data-url="{% url 'incomes-create-ajax' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter un Revenu
+      </button>        
+    </div>
+
+  <!-- Table -->
+  <table id="incomes-table" class="table table-borderless table-hover">
+    <thead>
+      <tr>
+        <th>Date d'Enregistrement</th>
+        <th>Date du Revenu</th>
+        <th>Société</th>
+        <th>Document</th>
+        <th>Banque</th>
+        <th>Montant</th>
+        <th class="no-sort">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for income in table.data %}
+      <tr>
+        <td>{{ income.date_enregistrement }}</td>
+        <td>{{ income.date_Income }}</td>
+        <td>{{ income.societe }}</td>
+        <td>{{ income.document }}</td>
+        <td>{{ income.banque|after_dash }}</td>
+        <td>{{ income.montant|accounting_format }}</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                <ul class="dropdown-menu">
+                <li>
+                    <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'incomes-edit' income.pk %}">
+                    Modifier <i class="bi bi-pencil-square me-2"></i>
+                    </button>
+                </li>
+                <li>
+                    <a href="{% url 'incomes-delete' income.pk %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                        Supprimer <i class="bi bi-trash me-2"></i>
+                      </a>
+                </li>
+                </ul>
+            </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}

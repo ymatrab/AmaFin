@@ -1,0 +1,62 @@
+{% extends "layouts/base.html" %}
+{% block title %}Factures{% endblock %}
+{% block content %}
+<!-- Invoices Table -->
+<h2 class="mt-5">Invoices</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle table-wide">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Date Enregistrement</th>
+          <th>Société</th>
+          <th>Banque</th>
+          <th>Document</th>
+          <th>Fournisseurs</th>
+          <th>N° de facture</th>
+          <th>Due Date / Ech Facture</th>
+          <th>Montant</th>
+          <th>Devise</th>
+          <th>MT DHS</th>
+          <th>Commentaire</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+          {# Render hidden fields first: this includes the `id` field #}
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+          <tr>
+            <td>
+              <input type="text" 
+                     class="form-control" 
+                     value="{{ form.instance.invoice_id }}" 
+                     readonly>
+            </td>
+            <td>{{ form.date_enregistrement }}</td>
+            <td>{{ form.societe }}</td>
+            <td>{{ form.banque }}</td>
+            <td>{{ form.document }}</td>
+            <td>{{ form.fournisseurs }}</td>
+            <td>{{ form.numero_facture }}</td>
+            <td>{{ form.due_date }}</td>
+            <td>{{ form.montant }}</td>
+            <td>{{ form.devise }}</td>
+            <td>{{ form.mt_dhs }}</td>
+            <td>{{ form.commentaire }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <button type="submit" class="btn btn-primary">Save Invoices</button>
+</form>
+{% endblock %}
+
+

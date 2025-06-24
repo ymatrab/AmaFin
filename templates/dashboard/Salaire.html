@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}Salaires{% endblock %}
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/salaires.js' %}"></script>
+
+<div class="container mt-4">
+
+  <!-- Formulaire dynamique -->
+  {% if form and form.instance.pk %}
+    <div id="salaire-form-container" style="display: block;">
+        {% include "dashboard/forms/salaire_form.html" %}
+    </div>
+  {% elif form %}
+    <div id="salaire-form-container" style="display: none;">
+        {% include "dashboard/forms/salaire_form.html" %}
+    </div>
+  {% else %}
+    <div id="salaire-form-container" style="display: none;"></div>
+  {% endif %}
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Historique des Salaires</h2>
+      <button id="add-new-salaire" data-url="{% url 'salaires-create-ajax' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter un Salaire
+      </button>
+    </div>
+
+    <!-- Table -->
+    <table id="salaires-table" class="table table-borderless table-hover">
+      <thead>
+        <tr>
+          <th>Date d'Enregistrement</th>
+          <th>Société</th>
+          <th>Banque</th>
+          <th>Document</th>
+          <th>Date Débit</th>
+          <th>Montant DHS</th>
+          <th>Commentaire</th>
+          <th class="no-sort">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for salaire in salaires %}
+        <tr>
+          <td>{{ salaire.date_enregistrement }}</td>
+          <td>{{ salaire.societe }}</td>
+          <td>{{ salaire.banque }}</td>
+          <td>{{ salaire.document }}</td>
+          <td>{{ salaire.date_debit|default_if_none:"—" }}</td>
+          <td>{{ salaire.montant_dhs|accounting_format }}</td>
+          <td>{{ salaire.commentaire|default_if_none:"—" }}</td>
+          <td>
+            <div class="dropdown">
+              <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+              <ul class="dropdown-menu">
+                <li>
+                  <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'salaires-edit' salaire.pk %}">
+                    Modifier <i class="bi bi-pencil-square me-2"></i>
+                  </button>
+                </li>
+                <li>
+                  <a href="{% url 'salaires-delete' salaire.pk %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                    Supprimer <i class="bi bi-trash me-2"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

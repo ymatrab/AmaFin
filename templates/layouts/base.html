@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Dashboard{% endblock %}</title>
+        
+        <!-- Fonts last -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+        
+        <!-- ✅ Load Bootstrap FIRST -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+        <!-- ✅ Then your custom styles (which will override Bootstrap if needed) -->
+        <link href="{% static 'css/sidebar.css' %}" rel="stylesheet">
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
+        <link href="{% static 'css/cards.css' %}" rel="stylesheet"/>
+        <link href="{% static 'css/invoices.css' %}" rel="stylesheet"/>      
+        <link href="{% static 'css/achat.css' %}" rel="stylesheet"/>  
+
+
+        <!-- ✅ Optional: jQuery UI CSS (for range_number_slider) -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- JS -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        
+        
+        <!-- ✅ Add in <head> -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/yadcf@0.9.4/jquery.dataTables.yadcf.css">
+
+        <!-- ✅ Add before </body> or in block extra_scripts -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/yadcf@0.9.4/jquery.dataTables.yadcf.js"></script>
+        
+        <!-- ✅ Bootstrap Datepicker JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+
+
+
+        {% block extrahead %}
+          {% if page_css %}
+            <link rel="stylesheet" href="{% static 'css/'|add:page_css %}">
+          {% endif %}
+        {% endblock %}
+    
+    </head>
+    <body>
+        {% include "layouts/navbar.html" %}
+        {% include "layouts/sidebar.html" %}
+      
+        {# Main content, pushed right by sidebar width (240px) #}
+        <main class="main-content">
+          <div class="container-fluid">
+            {% block content %}{% endblock %}
+          </div>
+        </main>
+      
+        {% include "layouts/footer.html" %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        {% block extrajs %}{% endblock %}
+      </body>     
+</html>

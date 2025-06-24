@@ -1,0 +1,67 @@
+{% extends "layouts/base.html" %}
+{% load custom_filters %}
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block title %}Impôts{% endblock %}
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/impot.js' %}"></script>
+
+<div class="container mt-4">
+
+    <!-- FORM AT THE TOP -->
+    {% if form and form.instance.pk %}
+    <div id="impot-form-container" style="display: block;">
+        {% include "dashboard/impot.html" %}
+    </div>
+    {% elif form %}
+    <div id="impot-form-container" style="display: none;">
+        {% include "dashboard/forms/impot_form.html" %}
+    </div>
+    {% else %}
+    <div id="impot-form-container" style="display: none;"></div>
+    {% endif %}
+
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between mb-3">
+          <h2>Liste des Impôts</h2>
+          <button id="add-impot-btn" data-url="{% url 'impots-create-ajax' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Ajouter un Impôt
+          </button>        
+        </div>
+
+    <table id="impot-table" class="table table-borderless table-hover">
+        <thead>
+            <tr>
+                <th>Date enregistrement</th>
+                <th>Societe</th>
+                <th>Banque</th>
+                <th>Document</th>
+                <th>Montant dhs</th>
+                <th>Date Debit</th>
+                <th class="no-sort">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for impot in impots %}
+            <tr>
+                <td>{{ impot.date_enregistrement }}</td>
+                <td>{{ impot.societe }}</td>
+                <td>{{ impot.banque }}</td>
+                <td>{{ impot.document }}</td>
+                <td>{{ impot.montant_dhs|accounting_format }}</td>
+                <td>{{ impot.date_debit }}</td>
+                <td>
+                    <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'impots-edit' impot.id %}">
+                        Modifier<i class="bi bi-pencil-square me-2"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

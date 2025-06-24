@@ -1,0 +1,42 @@
+{% load widget_tweaks %}
+
+{% if form %}
+  <form method="post"
+    action="{% if form.instance.pk %}{% url 'fx-edit' form.instance.pk %}{% else %}{% url 'fx-table' %}{% endif %}"
+    class="mb-4">
+
+    {% csrf_token %}
+    <div class="row g-3">
+      <h2>{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un taux FX</h2>
+
+      <div class="col-md-3">
+        <label class="form-label">Date</label>
+        {{ form.date|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Devise</label>
+        {{ form.currency|add_class:"form-select" }}
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Taux Actuel</label>
+        {{ form.rate_actual|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Prévision 3 Mois</label>
+        {{ form.rate_fcst_3m|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">% 3 Mois</label>
+        {{ form.percent_3m|add_class:"form-control" }}
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Valider</button>
+    <a href="#" id="cancel-edit" class="btn btn-secondary mt-4">Annuler</a>
+  </form>
+{% endif %}

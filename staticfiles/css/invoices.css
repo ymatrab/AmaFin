@@ -1,0 +1,12 @@
+/* Make the table “too wide” for its container, forcing a scrollbar */
+.table-wide {
+    min-width: 1200px;  /* or whatever total width you need */
+    width: max-content; /* auto‑expand to fit all columns */
+  }
+  
+  /* Prevent text from wrapping so columns stay wide */
+  .table-wide th,
+  .table-wide td {
+    white-space: nowrap;
+  }
+  

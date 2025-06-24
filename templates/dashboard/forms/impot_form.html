@@ -1,0 +1,45 @@
+{% load widget_tweaks %}
+
+{% if form %}
+  <form method="post"
+    action="{% if form.instance.pk %}{% url 'impots-edit' form.instance.pk %}{% else %}{% url 'impots-table' %}{% endif %}"
+    class="mb-4">
+
+    {% csrf_token %}
+    <div class="row g-3">
+      <h2>{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un Impôt</h2>
+      <div class="col-lg-12 mt-0">
+        
+      {% comment %} Première section - Informations générales {% endcomment %}
+      <h4 class="form-title text-danger">Détails de l'Impôt</h4>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Societe</label>
+          {{ form.societe|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Banque</label>
+          {{ form.banque|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Document</label>
+          {{ form.document|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Montant dhs</label>
+          {{ form.montant_dhs|add_class:"form-control" }}
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Date Debit</label>
+          {{ form.date_debit|add_class:"form-control" }}
+        </div>
+      </div>
+
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Valider</button>
+    <a href="#" id="cancel-edit" class="btn btn-secondary mt-4">Annuler</a>
+  </form>
+    
+{% endif %}

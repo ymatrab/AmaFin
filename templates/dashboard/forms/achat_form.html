@@ -1,0 +1,130 @@
+{% load widget_tweaks %}
+{% load custom_filters %}
+
+{% if form %}
+  <form method="post"
+    action="{% if form.instance.pk %}{% url 'achat-edit' form.instance.pk %}{% else %}{% url 'achat-table' %}{% endif %}"
+    class="mb-4">
+
+    {% csrf_token %}
+    <div class="row g-3">
+      <h2>{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un Achat</h2>
+      <div class="col-lg-8 mt-0">
+        
+      {% comment %} Première colonne à deux champs par ligne {% endcomment %}
+      <h4 class="form-title text-danger">Détails D'Achat</h4>
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Document</label>
+        {{ form.document|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Société</label>
+        {{ form.societe|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Banque</label>
+        {{ form.banque|add_class:"form-select" }}
+      </div>
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Fournisseurs</label>
+        {{ form.fournisseurs|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        <label class="form-label">N° Facture</label>
+        {{ form.numero_facture|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Due Date</label>
+        {{ form.due_date|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Montant</label>
+        {{ form.montant|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6 mt-3">
+        <label class="form-label">Devise</label>
+        {{ form.devise|add_class:"form-select" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Commentaire</label>
+        {{ form.commentaire|add_class:"form-control commentaire" }}
+      </div>
+    </div>
+    {% if user|has_group:"comptability" %}
+    <div class="col-lg-4 mt-0">
+      <h4 class="form-title text-danger">Invoice Information & Payment</h4>
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Type de Paiement</label>
+        {{ form.payment_type|add_class:"form-select" }}
+      </div>
+      <div class="col-md-12 mt-3">
+        <label class="form-label">N° Effet</label>
+        {{ form.numero_effet|add_class:"form-control" }}
+      </div>
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Priorité</label>
+        {{ form.priority|add_class:"form-select" }}
+      </div>
+
+      <div class="col-md-12 mt-4 form-check d-flex align-items-center" id="Debit">
+        <label class="form-check-label me-3" for="{{ form.debit.id_for_label }}">Débit</label>
+        {{ form.debit|add_class:"form-check-input" }}
+      </div>
+      
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Date de Débit</label>
+        {{ form.date_debit|add_class:"form-control" }}
+      </div>
+
+      
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Échéance Effet</label>
+        {{ form.date_echeance_effet|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Finex</label>
+        {{ form.Finex|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Paiement Fournisseur</label>
+        {{ form.date_paiement_fournisseur|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Nb jours Finex</label>
+        {{ form.nb_jours_finex|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Statut Finex</label>
+        {{ form.statut_finex|add_class:"form-select" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Intérêt</label>
+        {{ form.interet|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12 mt-3">
+        <label class="form-label">Refinancement Utilisé</label>
+        {{ form.refine_used|add_class:"form-select" }}
+      </div>
+    </div>
+    {% endif %}
+  
+  </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Valider</button>
+    <a href="#" id="cancel-edit" class="btn btn-secondary mt-4">Annuler</a>
+  </form>    
+    
+{% endif %}

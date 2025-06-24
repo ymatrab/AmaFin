@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% load widget_tweaks %}
+
+
+{% block title %}Achats{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow rounded-4">
+        <div class="card-body p-4">
+          <h3 class="card-title text-center mb-4">Connexion</h3>
+
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              Nom d'utilisateur ou mot de passe invalide.
+            </div>
+          {% endif %}
+
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="id_username" class="form-label">Nom d'utilisateur</label>
+              {{ form.username|add_class:"form-control" }}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_password" class="form-label">Mot de passe</label>
+              {{ form.password|add_class:"form-control" }}
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Se connecter</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <p class="text-center mt-3 text-muted">© {{ year|default:"2025" }}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

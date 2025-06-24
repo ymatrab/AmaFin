@@ -1,0 +1,162 @@
+{% extends "layouts/base.html" %}
+{% load render_table from django_tables2 %}
+{% load custom_filters %}
+{% load querystring_tags %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+{% block title %}Achats{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/achat.js' %}"></script>
+<div class="mt-0">
+</div>
+
+    {% if form and form.instance.pk %}
+    <div id="achat-form-container" style="display: block;">
+      {% include "dashboard/achat.html" %}
+    </div>
+  {% elif form %}
+    <div id="achat-form-container" style="display: none;">
+      {% include "dashboard/forms/achat_form.html" %}
+    </div>
+  {% else %}
+    <div id="achat-form-container" style="display: none;"></div>
+  {% endif %}
+  
+    <h3 class="mt-4">Liste des Achats</h3>
+
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between mb-3">
+          <h2>Achat Table</h2>
+          <button id="add-new-achat" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Ajouter un achat
+          </button>          
+        </div>
+ 
+          
+          
+        <div class="table-responsive-custom">
+          <table class="table table-borderless table-hover" id="achat-table">
+            <thead class="table">
+              <tr>
+                <th>Code Facture</th>
+                <th>Date enregistrement</th>
+                <th>Société</th>
+                <th>Banque</th>
+                <th>Document</th>
+                <th>Fournisseurs</th>
+                <th>N° de facture</th>
+                <th>Due Date / Ech Facture</th>
+                <th>Montant</th>
+                <th>Devise</th>
+                <th>Montant DHS</th>
+                <th>Commentaire</th>
+                <th>Payment type</th>
+                <th>Priority</th>
+                <th>Debit</th>
+                <th>Date debit</th>
+                <th>Numero effet</th>
+                <th>Date echeance effet</th>
+                <th>Finex</th>
+                <th>Date paiement fournisseur</th>
+                <th>Nb jours finex</th>
+                <th>Date echeance finex</th>
+                <th>Statut finex</th>
+                <th>Interet</th>
+                <th>Taux interet</th>
+                <th>Interet calcule</th>
+                <th>Difference</th>
+                <th>Refine used</th>
+                <th>Refinancement type</th>
+                <th>Percent 3M</th>
+                <th>Taux</th>
+                <th>Value Ajustée</th>
+                <th>Refine sugg</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for achat in achats %}
+              <tr>
+                <td>{{ achat.invoice_id }}</td>
+                <td>{{ achat.date_enregistrement }}</td>
+                <td>{{ achat.societe }}</td>
+                <td>{{ achat.banque|after_dash }}</td>
+                <td>{{ achat.document }}</td>
+                <td>{{ achat.fournisseurs }}</td>
+                <td>{{ achat.numero_facture }}</td>
+                <td>{{ achat.due_date }}</td>
+                <td>{{ achat.montant|accounting_format }}</td>
+                <td>{{ achat.devise }}</td>
+                <td>{{ achat.montant_dhs|accounting_format }}</td>
+                <td>{{ achat.commentaire }}</td>
+                <td>{{ achat.payment_type }}</td>
+                <td>
+                  {% if achat.priority == 3 %}
+                    <div class="priority-icon priority-low">!</div>
+                  {% elif achat.priority == 1 or achat.priority == 2 %}
+                    <div class="priority-icon priority-medium">!!</div>
+                  {% elif achat.priority == 0 %}
+                    <div class="priority-icon priority-high">!!!</div>
+                  {% else %}
+                    <div class="text-muted">N/A</div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if achat.debit %}
+                    <span class="badge badge-JUNIOR">✔ Payé</span>
+                  {% else %}
+                    <span class="badge badge-VERIFICATION">⏳ En attente</span>
+                  {% endif %}
+                </td>
+                <td>{{ achat.date_debit }}</td>
+                <td>{{ achat.numero_effet }}</td>
+                <td>{{ achat.date_echeance_effet }}</td>
+                <td>{{ achat.Finex }}</td>
+                <td>{{ achat.date_paiement_fournisseur }}</td>
+                <td>{{ achat.nb_jours_finex }}</td>
+                <td>{{ achat.date_echeance_finex }}</td>
+                <td>{{ achat.statut_finex }}</td>
+                <td>{{ achat.interet }}</td>
+                <td>{{ achat.taux_interet }}</td>
+                <td>{{ achat.interet_calcule|accounting_format }}</td>
+                <td>{{ achat.difference|accounting_format }}</td>
+                <td>{{ achat.refine_used }}</td>
+                <td>{{ achat.refinancement_type }}</td>
+                <td>{{ achat.percent_3m }}</td>
+                <td>{{ achat.taux }}</td>
+                <td>{{ achat.value_adjusted }}</td>
+                <td>{{ achat.refine_sugg }}</td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'achat-edit' achat.id %}">
+                          Modifier<i class="bi bi-pencil-square me-2"></i>
+                        </button>
+                      </li>
+                      <li>
+                        <a href="{% url 'achat-delete' achat.id %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                          Supprimer<i class="bi bi-trash me-2"></i>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+        </div>
+          
+          
+      </div>
+
+<div id="achat-form-container" style="display: none;"></div>
+
+
+{% endblock %}

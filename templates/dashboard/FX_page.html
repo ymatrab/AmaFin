@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Données FX{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/FX_page.js' %}"></script>
+<div class="container mt-4">
+
+  <!-- Formulaire dynamique -->
+  {% if form and form.instance.pk %}
+    <div id="achat-form-container" style="display: block;">
+        {% include "dashboard/forms/fx_form.html" %}
+    </div>
+  {% elif form %}
+    <div id="achat-form-container" style="display: none;">
+        {% include "dashboard/forms/fx_form.html" %}
+    </div>
+  {% else %}
+    <div id="achat-form-container" style="display: none;"></div>
+  {% endif %}
+
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Historique FX</h2>
+      <button id="add-new-fx" data-url="{% url 'fx-create-ajax' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter un FX
+      </button>        
+    </div>
+
+  <!-- Table -->
+  <table id="fx-table" class="table table-borderless table-hover">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Devise</th>
+        <th>Valeur Actuelle</th>
+        <th>Prévision 3M</th>
+        <th>% 3M</th>
+        <th>Volatilité 3M</th>
+        <th>Valeur Ajustée</th>
+        <th>Type de Refinancement</th>
+        <th class="no-sort">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fx in table.data %}
+      <tr>
+        <td>{{ fx.date }}</td>
+        <td>{{ fx.currency }}</td>
+        <td>{{ fx.rate_actual }}</td>
+        <td>{{ fx.rate_fcst_3m }}</td>
+        <td>{{ fx.percent_3m }}</td>
+        <td>{{ fx.vol_3m }}</td>
+        <td>{{ fx.value_adjusted }}</td>
+        <td>{{ fx.refinancement_type }}</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                <ul class="dropdown-menu">
+                <li>
+                    <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'fx-edit' fx.pk %}">
+                    Modifier <i class="bi bi-pencil-square me-2"></i>
+                    </button>
+                </li>
+                <li>
+                    <a href="{% url 'fx-delete' fx.pk %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                        Supprimer <i class="bi bi-trash me-2"></i>
+                      </a>
+                </li>
+                </ul>
+            </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}

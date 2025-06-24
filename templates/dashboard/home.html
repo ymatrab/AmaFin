@@ -1,0 +1,160 @@
+{% extends "layouts/base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+
+<script src="{% static 'js/home.js' %}"></script>
+
+<!-- Injecte les données dans un tag caché -->
+<div id="data-container"
+     data-series='{{ daily_series_json|safe  }}'
+     data-categories='{{ daily_categories_json|safe  }}'
+     data-weeklySeries='{{ weekly_series_json|safe  }}'
+     data-weeklyCategories='{{ weekly_categories_json|safe  }}'
+     data-top-achats='{{ top_achats|safe }}'
+     data-finex='{{ finex_par_banque_json|safe }}'>
+</div>
+
+
+<div class="row">
+  <!-- Orders Received -->
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card bg-c-blue order-card">
+      <div class="card-body">
+          <h5 class="text-white">Total Courant</h5>
+          <div class="text-white fs-3"><strong>{{ total_solde|accounting_format }} DHS</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Sales -->
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card bg-c-green order-card">
+      <div class="card-body">
+          <h5 class="text-white">Encaissents Prevus</h5>
+          <div class="text-white fs-3"><strong>{{ encaissement|accounting_format }} DHS</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue -->
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card bg-c-yellow order-card">
+      <div class="card-body">
+          <h5 class="text-white">TOTAL P0</h5>
+          <div class="text-white fs-3"><strong>{{ achat_urgent_total|accounting_format }} DHS</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Profit -->
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card bg-c-red order-card">
+      <div class="card-body">
+          <h5 class="text-white ">Gap P0</h5>
+          <div class="text-white fs-3"><strong>{{ gap_p0|accounting_format }} DHS</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="row" >
+  
+  <div class="col-8">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="">7 Days Commitments Overview (MDH)</h4>
+          </div>
+        <!-- <div id="achatStyledChart" style="max-width: 800px; margin-top: 20px;"></div> -->
+        <div id="achatGroupedChart" style="margin: 0 25px;"></div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="">Top P0 </h4>
+        </div>
+        <table id="table-top-achats" class="table table-hover table-sm table-borderless " style="width:100%">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fournisseur</th>
+              <th>Montant (DHS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for achat in top_achats %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ achat|get_item:"fournisseurs" }}</td>
+              <td>{{ achat|get_item:"montant_dhs"|accounting_format }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <div class="card" style="min-height: 95%;">
+      <div class="card-header">
+        <h4 class="">7 Days Commitments Overview (MDHS)</h4>
+      </div>
+      <div id="achatStackedChart" class="mt-5"></div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="card" style="min-height: 95%;">
+      <div class="card-body bg-pattern bg-primary text-white">
+      <div class="row">
+        <h3>BP</h3>
+      </div>
+
+      <div class="row my-4">
+        <div class="col">
+            <h3 class="m-0">Escompte</h3>
+  
+        </div>
+        <div class="col">
+            <h3 class="m-0">{{ escompte_disponible_BP|accounting_format }} MDHs</h3>
+        </div>
+      </div>
+      
+      <div id="donutChart1" class="mt-5"></div>
+
+    </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="card" style="min-height: 95%;">
+      <div class="card-body bg-pattern">
+      <div class="row">
+        <h3>BMCE</h3>
+      </div>
+      <div class="row my-4">
+        <div class="col">
+            <h3 class="m-0">Escompte</h3>
+  
+        </div>
+        <div class="col">
+            <h3 class="m-0">{{ escompte_disponible_BMCE|accounting_format }} MDHs</h3>
+        </div>
+      </div>
+      <div id="donutChart2" class="mt-5"></div>  
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock %}

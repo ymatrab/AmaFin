@@ -1,0 +1,158 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load custom_filters %}
+
+{% load static %}
+
+{% block title %}Données Escompte{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/escompte.js' %}"></script>
+
+<div class="container mt-4">
+
+  {% load humanize %}  {# Pour intcomma #}
+
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">Résumé Escompte par Banque</h5>
+    </div>
+    <div class="card-body p-0">
+      <table id="table-escompte-summary" class="table table-bordered text-center mb-0">
+        <thead class="thead-dark">
+          <tr>
+            <th></th>
+            <th>BMCE</th>
+            <th>BP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>TOTAL Consommé</strong></td>
+            <td>{{ escompte_summary.BMCE.total_consommee|floatformat:2|intcomma }}</td>
+            <td>{{ escompte_summary.BP.total_consommee|floatformat:2|intcomma }}</td>
+          </tr>
+          <tr>
+            <td><strong>Total En Cours</strong></td>
+            <td>{{ escompte_summary.BMCE.total_en_cours|floatformat:2|intcomma }}</td>
+            <td>{{ escompte_summary.BP.total_en_cours|floatformat:2|intcomma }}</td>
+          </tr>
+          <tr>
+            <td><strong>Ligne Disponible</strong></td>
+            <td>{{ escompte_summary.BMCE.ligne_disponible|floatformat:2|intcomma }}</td>
+            <td>{{ escompte_summary.BP.ligne_disponible|floatformat:2|intcomma }}</td>
+          </tr>
+          <tr>
+            <td><strong>Disponible</strong></td>
+            <td class="text-danger">{{ escompte_summary.BMCE.disponible|floatformat:2|intcomma }}</td>
+            <td class="text-danger">{{ escompte_summary.BP.disponible|floatformat:2|intcomma }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Formulaire dynamique -->
+  {% if form and form.instance.pk %}
+    <div id="escompte-form-container" class="mt-4" style="display: block;">
+        {% include "dashboard/forms/escompte_form.html" %}
+    </div>
+  {% elif form %}
+    <div id="escompte-form-container" class="mt-4" style="display: none;">
+        {% include "dashboard/forms/escompte_form.html" %}
+    </div>
+  {% else %}
+    <div id="escompte-form-container" class="mt-4" style="display: none;"></div>
+  {% endif %}
+
+
+
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Historique des Escomptes</h2>
+      <button id="add-new-escompte" data-url="{% url 'escompte-create-ajax' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter un Escompte
+      </button>        
+    </div>
+
+  <!-- Table -->
+  <p> escompte: {{escompte}}</p>
+  <table id="escomptes-table" class="table table-borderless table-hover">
+    <thead>
+      <tr>
+        <th>Numéro Effets</th>
+        <th>N° Remise</th>
+        <th>Référence BD</th>
+        <th>date dépôt</th>
+        <th>Code Client</th>
+        <th>Nom Client</th>
+        <th>Montant Effet</th>
+        <th>Date d'effet</th>
+        <th>Escompte</th>
+        <th>Date Paiement</th>
+        <th>Banque</th>
+        <th>Jours Retard</th>
+        <th>Jours Escompte</th>
+        <th>Libéré</th>
+        <th>Coût</th>
+        <th class="no-sort">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for escompte in escomptes %}
+      <tr>
+        <td>{{ escompte.numero_effets }}</td>
+        <td>{{ escompte.n_remise }}</td>
+        <td>{{ escompte.reference_en_bd|default:"-" }}</td>
+        <td>{{ escompte.date_decal }}</td>
+        <td>{{ escompte.code_client }}</td>
+        <td>{{ escompte.nom_client }}</td>
+        <td>{{ escompte.montant_effet|accounting_format }}</td>
+        <td>{{ escompte.date_decal_2 }}</td>
+        <td>
+          {% if escompte.escompte == 'OK' %}
+            <span class="badge bg-success">{{ escompte.escompte }}</span>
+          {% else %}
+            <span class="badge bg-danger">{{ escompte.escompte }}</span>
+          {% endif %}
+        </td>
+        <td>{{ escompte.date_de_payement }}</td>
+        <td>{{ escompte.banque|after_dash }}</td>
+        <td>{{ escompte.jours_retard }}</td>
+        <td>{{ escompte.jours_escompte }}</td>
+        <td class="text-center">
+          {% if escompte.Libere %}
+            <i class="bi bi-check-circle-fill text-success fs-5" title="Libéré"></i>
+          {% else %}
+            <i class="bi bi-x-circle-fill text-danger fs-5" title="Non libéré"></i>
+          {% endif %}
+        </td>
+        <td>{{ escompte.le_cout|floatformat:2 }}</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                <ul class="dropdown-menu">
+                <li>
+                    <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'escompte-edit' escompte.pk %}">
+                    Modifier <i class="bi bi-pencil-square me-2"></i>
+                    </button>
+                </li>
+                <li>
+                    <a href="{% url 'escompte-delete' escompte.pk %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                        Supprimer <i class="bi bi-trash me-2"></i>
+                      </a>
+                </li>
+                </ul>
+            </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}

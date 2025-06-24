@@ -1,0 +1,60 @@
+{% extends "layouts/base.html" %}
+{% load custom_filters %}
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block title %}Banques{% endblock %}
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/bank.js' %}"></script>
+
+<div class="container mt-4">
+
+    
+  <!-- FORM AT THE TOP -->
+    {% if form and form.instance.pk %}
+    <div id="achat-form-container" style="display: block;">
+        {% include "dashboard/bank.html" %}
+    </div>
+    {% elif form %}
+    <div id="achat-form-container" style="display: none;">
+        {% include "dashboard/bank_form.html" %}
+    </div>
+    {% else %}
+    <div id="achat-form-container" style="display: none;"></div>
+    {% endif %}
+
+  <h3 class="mb-4">Liste des Banques</h3>
+
+  <table id="bank-table" class="table table-borderless table-hover">
+    <thead>
+      <tr>
+        <th>Banque</th>
+        <th>Limit Finex</th>
+        <th>Taux Intérêt Finex</th>
+        <th>Intérêt Fixe</th>
+        <th class="no-sort">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for bank in banks %}
+      <tr>
+        <td>{{ bank.banque }}</td>
+        <td>{{ bank.limit_finex|accounting_format }}</td>
+        <td>{{ bank.taux_interet_finex }}</td>
+        <td>{{ bank.interet_fix }}</td>
+        <td>
+            <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'bank-edit' bank.id %}">
+                Modifier<i class="bi bi-pencil-square me-2"></i>
+              </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% endblock %}
+

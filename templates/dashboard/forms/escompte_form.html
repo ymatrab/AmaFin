@@ -1,0 +1,67 @@
+{% load widget_tweaks %}
+
+{% if form %}
+  <form method="post"
+    action="{% if form.instance.pk %}{% url 'escompte-edit' form.instance.pk %}{% else %}{% url 'escompte-table' %}{% endif %}"
+    class="mb-4">
+
+    {% csrf_token %}
+    <div class="row g-3">
+      <h2>{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un escompte</h2>
+
+      <div class="col-md-4">
+        <label class="form-label">Numéro Effets</label>
+        {{ form.numero_effets|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">N° Remise</label>
+        {{ form.n_remise|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Référence en BD</label>
+        {{ form.reference_en_bd|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Date Dépôt</label>
+        {{ form.date_decal|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Date D'effet</label>
+        {{ form.date_decal_2|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Code Client</label>
+        {{ form.code_client|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label">Nom Client</label>
+        {{ form.nom_client|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Montant Effet (€)</label>
+        {{ form.montant_effet|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Date de Paiement</label>
+        {{ form.date_de_payement|add_class:"form-control" }}
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label">Banque</label>
+        {{ form.banque|add_class:"form-select" }}
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Valider</button>
+    <a href="#" id="cancel-edit" class="btn btn-secondary mt-4">Annuler</a>
+  </form>
+{% endif %}

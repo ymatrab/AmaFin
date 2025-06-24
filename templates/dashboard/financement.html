@@ -1,0 +1,86 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}Financement{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/table.js' %}"></script>
+<script src="{% static 'js/financement.js' %}"></script>
+
+<div class="container mt-4">
+
+  <!-- Formulaire dynamique -->
+  {% if form and form.instance.pk %}
+    <div id="financement-form-container" style="display: block;">
+        {% include "dashboard/forms/financement_form.html" %}
+    </div>
+  {% elif form %}
+    <div id="financement-form-container" style="display: none;">
+        {% include "dashboard/forms/financement_form.html" %}
+    </div>
+  {% else %}
+    <div id="financement-form-container" style="display: none;"></div>
+  {% endif %}
+
+  <div class="flex-grow-1 p-4">
+    <div class="d-flex justify-content-between mb-3">
+      <h2>Historique des Financements</h2>
+      <button id="add-new-financement" data-url="{% url 'financement-create-ajax' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter un Financement
+      </button>
+    </div>
+
+    <!-- Table -->
+    <table id="financement-table" class="table table-borderless table-hover">
+      <thead>
+        <tr>
+          <th>Date d'Enregistrement</th>
+          <th>Société</th>
+          <th>Banque</th>
+          <th>Document</th>
+          <th>Date Débit</th>
+          <th>Montant</th>
+          <th>Devise</th>
+          <th>Montant DHS</th>
+          <th>Commentaire</th>
+          <th class="no-sort">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for financement in financements %}
+        <tr>
+          <td>{{ financement.date_enregistrement }}</td>
+          <td>{{ financement.societe }}</td>
+          <td>{{ financement.banque }}</td>
+          <td>{{ financement.document }}</td>
+          <td>{{ financement.date_debit|default_if_none:"—" }}</td>
+          <td>{{ financement.montant|accounting_format|default_if_none:"—" }}</td>
+          <td>{{ financement.devise|default_if_none:"—" }}</td>
+          <td>{{ financement.montant_dhs|accounting_format }}</td>
+          <td>{{ financement.commentaire|default_if_none:"—" }}</td>
+          <td>
+            <div class="dropdown">
+              <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+              <ul class="dropdown-menu">
+                <li>
+                  <button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'financement-edit' financement.pk %}">
+                    Modifier <i class="bi bi-pencil-square me-2"></i>
+                  </button>
+                </li>
+                <li>
+                  <a href="{% url 'financement-delete' financement.pk %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">
+                    Supprimer <i class="bi bi-trash me-2"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

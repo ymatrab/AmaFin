@@ -1,0 +1,101 @@
+
+body{
+    font-family: "Quicksand", sans-serif;
+    background: #f6f7fb;
+
+}
+
+.card {
+    box-shadow: rgba(4, 26, 55, 0.16) 0px 1px 2.94px 0.06px;
+    margin-bottom: 30px;
+    transition: 0.3s ease-in-out;
+    border: none;
+}
+
+.card h4{
+    margin-bottom: 0px;
+    color: rgb(34, 34, 34);
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 1.1;
+    position: relative;
+}
+
+.card-header {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 10px 25px;
+    border: none;
+}
+
+.card-body{
+    border-radius: var(--bs-card-inner-border-radius) var(--bs-card-inner-border-radius) 0 0;
+}
+
+.bg-c-blue {
+    background-color: #4099ff;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+.bg-c-purple {
+    background-color: #563d7c;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+
+.bg-c-green {
+    background-color: #2ed8b6;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+
+.bg-c-yellow {
+    background-color: #ffb64d;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+
+.bg-c-red {
+    background-color: #ff5370;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
+
+.order-card {
+    color: rgb(255, 255, 255);
+}
+.card-body {
+    padding: 25px 25px;
+}
+
+#table-top-achats_wrapper{
+    margin: 0 25px;
+    min-height: 375px;
+    border: None;
+}
+
+#table-top-achats{
+    border: None;
+}
+
+#table-top-achats>tbody>tr>td{
+    border: None;
+}
+
+#table-top-achats thead th {
+    background-color: #563d7c !important;  /* ou #0d6efd pour Bootstrap 5 */
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+    color: white !important;
+    text-align: center;
+    padding: 5px 10px;
+  }
+
+#table-top-achats_filter{
+    margin-bottom: 5px;
+}
+.bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20H8V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%23cccccc' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-position: center center;
+    background-repeat: repeat;
+}
+/* .apexcharts-tooltip,
+.apexcharts-tooltip * {
+  color: #000 !important;
+  fill: #000 !important;
+} */

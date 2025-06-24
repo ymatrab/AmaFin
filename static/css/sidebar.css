@@ -1,0 +1,62 @@
+/* Sidebar container */
+:root {
+--sidebar-width: 240px;
+--navbar-height: 56px;
+}
+
+/* ensure body padding for navbar */
+/* body {
+  padding-top: var(--navbar-height);
+} */
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 1.5rem; /* optional padding around your cards */
+  }
+
+.sidebar {
+    position: fixed;
+    top: var(--navbar-height);               /* height of your fixed‑top navbar */
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--navbar-height));
+    background: #ffffff;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  /* Brand / Logo bar at top of sidebar */
+  .sidebar .brand {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Navigation links */
+  .sidebar .nav-link {
+    color: #495057;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+  }
+  .sidebar .nav-link:hover,
+  .sidebar .nav-link.active {
+    background-color: #f8f9fa;
+    color: #212529;
+  }
+  
+  /* Icons + text */
+  .sidebar .nav-link i {
+    font-size: 1.2rem;
+  }
+  .sidebar .nav-link span {
+    margin-left: 0.75rem;
+  }
+
+
+  .content-wrapper {
+    margin-left: var(--sidebar-width);
+  }
+
+  

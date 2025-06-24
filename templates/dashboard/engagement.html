@@ -1,0 +1,275 @@
+{% extends "layouts/base.html" %}
+{% load render_table from django_tables2 %}
+{% load custom_filters %}
+{% load querystring_tags %}
+{% load widget_tweaks %}
+
+
+{% block title %}Achats{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/engagement.js' %}"></script>
+
+<div class="mt-0">
+</div>
+
+    {% if form and form.instance.pk %}
+    <div id="achat-form-container" style="display: block;">
+      {% include "dashboard/achat.html" %}
+    </div>
+  {% elif form %}
+    <div id="achat-form-container" style="display: none;">
+      {% include "dashboard/achat_form.html" %}
+    </div>
+  {% else %}
+    <div id="achat-form-container" style="display: none;"></div>
+  {% endif %}
+  
+  
+
+
+
+    <h3 class="mt-4">Liste des Achats</h3>
+    <!-- {% render_table table %} -->
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between mb-3">
+          <h2>Achat Table</h2>
+        </div>
+        <div class="d-flex justify-content-end dropdown mb-3">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="toggleColumnsBtn"
+              data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+              + Colonnes supplémentaires
+            </button>
+            <form method="get" class="row g-2 align-items-end mb-3">
+                {% for field in filter.form.visible_fields %}
+                  <div class="col-auto">
+                    <div class="form-floating">
+                      {% if field.field.widget.input_type == "select" %}
+                        {{ field|add_class:"form-select" }}
+                      {% else %}
+                        {{ field|add_class:"form-control" }}
+                      {% endif %}
+                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                  </div>
+                {% endfor %}
+              
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary">Filtrer</button>
+                </div>
+              </form>
+            <div class="dropdown-menu p-3" style="width: 280px; max-height: 300px; overflow-y: auto;">
+                <div class="mt-2 text-end">
+                    <button id="applyColumnToggle" class="btn btn-sm btn-primary">Valider</button>
+                  </div>
+              <label><input type="checkbox" class="toggle-col" data-col="additional1"> Document</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional4"> N° Facture</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional5"> Due Date</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional6"> Montant</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional7"> Devise</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional8"> Finex</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional9"> Date Paiement Fournisseur</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional10"> Nb Jours Finex</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional11"> Date Échéance Finex</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional12"> Statut Finex</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional13"> Intérêt</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional14"> Taux d’intérêt</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional15"> Intérêt Calculé</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional16"> Différence</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional17"> Type Refinancement</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional18"> Pourcentage 3M</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional19"> Taux</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional20"> Valeur Ajustée</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional21"> Sugg. Refin.</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional22"> Refin. Utilisé</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional23"> Numéro Effet</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional24"> Date Effet</label><br>
+              <label><input type="checkbox" class="toggle-col" data-col="additional25"> Commentaire</label><br>
+              
+            </div>
+          </div>
+          
+          
+          
+        <div class="table-responsive-custom">
+            <table class="table table-borderless table-hover" id="achat-table">
+                <thead class="table">
+                <tr>
+                    {% load querystring_tags %}
+
+                    <th><a href="{% querystring sort='invoice_id' %}">ID {% if table.order_by == "invoice_id" %}▲{% elif table.order_by == "-invoice_id" %}▼{% endif %}</a></th>
+                    <th><a href="{% querystring sort='societe' %}">Société</a></th>
+                    <th><a href="{% querystring sort='banque' %}">Banque</a></th>
+                    <th class="col-additional1"><a href="{% querystring sort='document' %}">Document</a></th>
+                    <th><a href="{% querystring sort='fournisseurs' %}">Fournisseur</a></th>
+                    <th class="col-additional4"><a href="{% querystring sort='numero_facture' %}">N° Facture</a></th>
+                    <th class="col-additional5"><a href="{% querystring sort='due_date' %}">Due Date</a></th>
+                    <th class="col-additional6"><a href="{% querystring sort='montant' %}">Montant</a></th>
+                    <th class="col-additional7"><a href="{% querystring sort='devise' %}">Devise</a></th>
+                    <th><a href="{% querystring sort='montant_dhs' %}">Montant DHs</a></th>
+                    <th><a href="{% querystring sort='priority' %}">Priority</a></th>
+                    <th><a href="{% querystring sort='date_debit' %}">Date Debit</a></th>
+                    <th class="col-additional8"><a href="{% querystring sort='Finex' %}">Finex</a></th>
+                    <th class="col-additional9"><a href="{% querystring sort='date_paiement_fournisseur' %}">Date Paiement Fournisseur</a></th>
+                    <th class="col-additional10"><a href="{% querystring sort='nb_jours_finex' %}">Nb Jours Finex</a></th>
+                    <th><a href="{% querystring sort='debit' %}">Debit</a></th>
+                    <th><a href="{% querystring sort='payment_type' %}">Payment Type</a></th>
+                    <th class="col-additional11"><a href="{% querystring sort='date_echeance_finex' %}">Date Échéance Finex</a></th>
+                    <th class="col-additional12"><a href="{% querystring sort='statut_finex' %}">Statut Finex</a></th>
+                    <th class="col-additional13"><a href="{% querystring sort='interet' %}">Intérêt</a></th>
+                    <th class="col-additional14"><a href="{% querystring sort='taux_interet' %}">Taux d’intérêt</a></th>
+                    <th class="col-additional15"><a href="{% querystring sort='interet_calcule' %}">Intérêt Calculé</a></th>
+                    <th class="col-additional16"><a href="{% querystring sort='difference' %}">Différence</a></th>
+                    <th class="col-additional17"><a href="{% querystring sort='refinancement_type' %}">Type Refinancement</a></th>
+                    <th class="col-additional18"><a href="{% querystring sort='percent_3m' %}">Pourcentage 3M</a></th>
+                    <th class="col-additional19"><a href="{% querystring sort='taux' %}">Taux</a></th>
+                    <th class="col-additional20"><a href="{% querystring sort='value_adjusted' %}">Valeur Ajustée</a></th>
+                    <th class="col-additional21"><a href="{% querystring sort='refine_sugg' %}">Sugg. Refin.</a></th>
+                    <th class="col-additional22"><a href="{% querystring sort='refine_used' %}">Refin. Utilisé</a></th>
+                    <th class="col-additional23"><a href="{% querystring sort='numero_effet' %}">Numéro Effet</a></th>
+                    <th class="col-additional24"><a href="{% querystring sort='date_echeance_effet' %}">Date Effet</a></th>
+                    <th class="col-additional25"><a href="{% querystring sort='commentaire' %}">Commentaire</a></th>                    
+                    
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for achat in table.page.object_list %}
+                <tr>
+                    <td>{{ achat.record.invoice_id }}</td>
+                    <td>{{ achat.record.societe }}</td>
+                    <td>{{ achat.record.banque|after_dash }}</td>
+                    <td class="col-additional1">{{ achat.record.document }}</td>
+                    <td>{{ achat.record.fournisseurs }}</td>
+                    <td class="col-additional4">{{ achat.record.numero_facture }}</td>
+                    <td class="col-additional5">{{ achat.record.due_date }}</td>
+                    <td class="col-additional6">{{ achat.record.montant }}</td>
+                    <td class="col-additional7">{{ achat.record.devise }}</td>
+                    <td>{{ achat.record.montant_dhs }}</td>
+                    <td>
+                        {% if achat.record.priority == 3 %}
+                            <div class="priority-icon priority-low">!</div>
+                        {% elif achat.record.priority == 1 or achat.record.priority == 2 %}
+                            <div class="priority-icon priority-medium">!!</div>
+                        {% elif achat.record.priority == 0 %}
+                            <div class="priority-icon priority-high">!!!</div>
+                        {% else %}
+                            <div class="text-muted">N/A</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if achat.record.payment_type != "finex" %}
+                            {{ achat.record.date_debit }}
+                        {% else %}
+                            {{ achat.record.date_echeance_finex }}
+                        {% endif %}
+                    </td>
+                    <td class="col-additional8">{{ achat.record.Finex }}</td>
+                    <td class="col-additional9">{{ achat.record.date_paiement_fournisseur }}</td>
+                    <td class="col-additional10">{{ achat.record.nb_jours_finex }}</td>
+                    <td>
+                    {% if achat.record.debit %}
+                        <span class="badge badge-JUNIOR">✔ Payé</span>
+                    {% else %}
+                        <span class="badge badge-VERIFICATION">⏳ En attente</span>
+                    {% endif %}
+                    </td>
+                    <td>{{ achat.record.payment_type }}</td>
+                    
+                    <td class="col-additional11">{{ achat.record.date_echeance_finex }}</td>
+                    <td class="col-additional12">{{ achat.record.statut_finex }}</td>
+                    <td class="col-additional13">{{ achat.record.interet }}</td>
+                    <td class="col-additional14">{{ achat.record.taux_interet }}</td>
+                    <td class="col-additional15">{{ achat.record.interet_calcule }}</td>
+                    <td class="col-additional16">{{ achat.record.difference }}</td>
+                    <td class="col-additional17">{{ achat.record.refinancement_type }}</td>
+                    <td class="col-additional18">{{ achat.record.percent_3m }}</td>
+                    <td class="col-additional19">{{ achat.record.taux }}</td>
+                    <td class="col-additional20">{{ achat.record.value_adjusted }}</td>
+                    <td class="col-additional21">{{ achat.record.refine_sugg }}</td>
+                    <td class="col-additional22">{{ achat.record.refine_used }}</td>
+                    <td class="col-additional23">{{ achat.record.numero_effet }}</td>
+                    <td class="col-additional24">{{ achat.record.date_echeance_effet }}</td>
+                    <td class="col-additional25">{{ achat.record.commentaire }}</td>
+
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn-sm btn-light" id="Drop_btn" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                            <ul class="dropdown-menu">
+                            <li><button type="button" class="dropdown-item btn btn-sm btn-outline-primary show-edit-form" data-url="{% url 'achat-edit' achat.record.id %}">Modifier<i class="bi bi-pencil-square me-2"></i></button></li>
+                            <li><a href="{% url 'achat-delete' achat.record.id %}" class="dropdown-item text-danger btn btn-sm btn-outline-danger">Supprimer<i class="bi bi-trash me-2"></i></a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if table.page and table.paginator %}
+            <nav aria-label="Pagination">
+            <ul class="pagination justify-content-center">
+
+                {# « First page #}
+                {% if table.page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% querystring page=1 %}{{ request.GET.urlencode|cut:'page='|cut:'&page='|yesno:'&,,' }}">«</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">«</span></li>
+                {% endif %}
+
+                {# ‹ Previous page #}
+                {% if table.page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% querystring page=table.page.previous_page_number %}{{ request.GET.urlencode|cut:'page='|cut:'&page='|yesno:'&,,' }}">‹</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">‹</span></li>
+                {% endif %}
+
+                {# Page numbers #}
+                {% for num in table.paginator.page_range %}
+                {% if num >= table.page.number|add:'-2' and num <= table.page.number|add:'2' %}
+                    {% if num == table.page.number %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% querystring page=num %}{{ request.GET.urlencode|cut:'page='|cut:'&page='|yesno:'&,,' }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+                {% endfor %}
+
+                {# › Next page #}
+                {% if table.page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% querystring page=table.page.next_page_number %}{{ request.GET.urlencode|cut:'page='|cut:'&page='|yesno:'&,,' }}">›</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">›</span></li>
+                {% endif %}
+
+                {# » Last page #}
+                {% if table.page.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% querystring page=table.paginator.num_pages %}{{ request.GET.urlencode|cut:'page='|cut:'&page='|yesno:'&,,' }}">»</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">»</span></li>
+                {% endif %}
+
+            </ul>
+            </nav>
+            {% endif %}
+
+
+
+        </div>
+          
+          
+      </div>
+
+<div id="achat-form-container" style="display: none;"></div>
+
+  
+{% endblock %}
