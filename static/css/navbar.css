@@ -1,0 +1,7 @@
+.logo{
+    width: calc(var(--sidebar-width) - 15px)
+}
+.nav-link{
+    color: #fff;
+    font-size: 15px;
+}

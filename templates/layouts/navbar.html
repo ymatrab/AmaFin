@@ -3,10 +3,11 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-danger shadow-sm fixed-top">
     <div class="container-fluid">
       <!-- Brand / Logo -->
-      <a class="navbar-brand" href="{% url 'home' %}">
-        <img src="{% static 'images/logo.png' %}" alt="Logo" height="30">
-        AMAFin Dash
-      </a>
+       <div class="logo">
+          <a class="navbar-brand" href="">
+          </a>
+       </div>
+      
   
       <!-- Toggler for mobile -->
       <button class="navbar-toggler" 
@@ -19,15 +20,51 @@
       </button>
   
       <!-- Nav links -->
-      <div class="collapse navbar-collapse" id="mainNav">
+      <div class="collapse navbar-collapse px-0" id="mainNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
+            <a class="nav-link me-4" href="{% url 'home' %}">Home</a>
           </li>
-
-          <!-- add more nav-items here -->
+          <li class="nav-item">
+            <a class="nav-link me-4" href="{% url 'achat-table' %}">Achats</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link me-4" href="{% url 'financement-table' %}">Financements</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link me-4" href="{% url 'escompte-table' %}">Escomptes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link me-4" href="{% url 'incomes-table' %}">Payments</a>
+          </li>
         </ul>
       </div>
+      <div class="px-0" id="profilNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link me-2" href="#" id="messagesDropdown" role="button" aria-expanded="false">
+              <i class="bi bi-envelope"></i> <!-- Bootstrap Icons for Messages -->
+            </a>
+          </li>
+          <!-- Notifications Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link me-2" href="#" id="notificationsDropdown" role="button" aria-expanded="false">
+              <i class="bi bi-bell"></i> 
+            </a>
+          </li>
+          <!-- Logout Button -->
+          <li class="nav-item d-flex align-items-center">
+              <form action="{% url 'logout' %}" method="POST" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link nav-link me-2">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </form>
+            
+          </li>
+        </ul>
+      </div>
+
     </div>
   </nav>
   

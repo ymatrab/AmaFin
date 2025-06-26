@@ -1,48 +1,94 @@
-{% extends "layouts/base.html" %}
+{% extends "registration/base.html" %}
 {% load static %}
 {% load custom_filters %}
 {% load widget_tweaks %}
 
-
-{% block title %}Achats{% endblock %}
+{% block title %}Connexion - AMAFIN{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-5">
-      <div class="card shadow rounded-4">
-        <div class="card-body p-4">
-          <h3 class="card-title text-center mb-4">Connexion</h3>
+<style>
 
-          {% if form.errors %}
-            <div class="alert alert-danger">
-              Nom d'utilisateur ou mot de passe invalide.
-            </div>
-          {% endif %}
+  .login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-card {
+    background: #ffffff;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+  .login-left {
+    /* background-color: #d8f3dc; */
+    background: linear-gradient(to bottom left, #2a8df8, #0375F1);
+    padding: 2rem;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+  }
+  .login-right {
+    width: 40%;
+    padding: 5rem;
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+  }
+  .login-right h3 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  .btn-login {
+    background-color: #212529;
+    color: white;
+  }
+</style>
 
-          <form method="post">
-            {% csrf_token %}
+<div class="container-fluid login-wrapper p-0 m-0">
+  <div class="login-card">
+    <div class="login-left">
+      <img src="{% static 'images/logo-enosis-blanc.png' %}" alt="Illustration" class="img-fluid mb-4" style="max-width: 20%;">
+      <h4 class="fw-bold">Bienvenue sur AMAFIN</h4>
+      <p class="text-center">Optimisez votre gestion financière grâce à notre plateforme.</p>
+    </div>
 
-            <div class="mb-3">
-              <label for="id_username" class="form-label">Nom d'utilisateur</label>
-              {{ form.username|add_class:"form-control" }}
-            </div>
+    <div class="login-right">
+      <h3 class="text-center">Connexion à votre espace</h3>
 
-            <div class="mb-3">
-              <label for="id_password" class="form-label">Mot de passe</label>
-              {{ form.password|add_class:"form-control" }}
-            </div>
-
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Se connecter</button>
-            </div>
-          </form>
+      {% if form.errors %}
+        <div class="alert alert-danger">
+          Nom d'utilisateur ou mot de passe invalide.
         </div>
-      </div>
+      {% endif %}
 
-      <p class="text-center mt-3 text-muted">© {{ year|default:"2025" }}</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Nom d'utilisateur</label>
+          {{ form.username|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Mot de passe</label>
+          {{ form.password|add_class:"form-control" }}
+        </div>
+
+        <!-- <div class="mb-3 text-end">
+          <a href="" class="text-muted">Mot de passe oublié ?</a>
+        </div> -->
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-login">Se connecter</button>
+        </div>
+      </form>
+
+      <p class="text-center mt-4 text-muted">© {{ year|default:"2025" }} AMAFIN</p>
     </div>
   </div>
 </div>
-
 {% endblock %}

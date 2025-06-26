@@ -2,8 +2,8 @@
 FROM python:3.10-slim
 
 # Set environment
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Create working directory
 WORKDIR /app
@@ -25,4 +25,4 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # Run the app with Gunicorn
-CMD ["gunicorn", "yourproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "AFDash.wsgi:application", "--bind", "0.0.0.0:8000"]

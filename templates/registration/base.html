@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Login{% endblock %}</title>
+        
+        <!-- Fonts last -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+        
+        <!-- ✅ Load Bootstrap FIRST -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+        {% block extrahead %}
+          {% if page_css %}
+            <link rel="stylesheet" href="{% static 'css/'|add:page_css %}">
+          {% endif %}
+        {% endblock %}
+    
+    </head>
+    <body>
+        
+
+      
+        {# Main content, pushed right by sidebar width (240px) #}
+        <main class="main-content p-0 m-0">
+          <div class="container-fluid p-0 m-0">
+            {% block content %}{% endblock %}
+          </div>
+        </main>
+      
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        {% block extrajs %}{% endblock %}
+      </body>     
+</html>

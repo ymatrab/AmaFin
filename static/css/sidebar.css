@@ -12,7 +12,17 @@
 .main-content {
     margin-left: var(--sidebar-width);
     padding: 1.5rem; /* optional padding around your cards */
+    padding-top: calc(1.5rem + var(--navbar-height));
   }
+
+  .navbar {
+    position: fixed;
+    z-index: 9999;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius:0;
+}
 
 .sidebar {
     position: fixed;
@@ -28,7 +38,6 @@
   
   /* Brand / Logo bar at top of sidebar */
   .sidebar .brand {
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
