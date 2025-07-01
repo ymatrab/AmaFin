@@ -198,8 +198,9 @@ class Achat(models.Model):
 
             self.date_echeance_finex = self.date_paiement_fournisseur + timedelta(days=self.nb_jours_finex)
 
-        if self.payment_type =="courant":
-            self.date_debit=datetime.now()
+        if self.payment_type =="courant" :
+            if not self.date_debit:
+                self.date_debit=datetime.now()
             if self.devise =='MAD' :
                 self.montant_dhs=self.montant
             elif self.devise in ['EUR', 'USD']:
