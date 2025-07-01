@@ -18,6 +18,48 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} - {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': str(LOG_DIR / 'django.log'),
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+
+    'root': {
+        'handlers': ['file', 'console'],
+        'level': 'WARNING',
+    },
+
+    'django.request': {
+        'handlers': ['file', 'console'],
+        'level': 'ERROR',
+        'propagate': False,
+    },
+}
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 

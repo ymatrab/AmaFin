@@ -25,4 +25,4 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # Run the app with Gunicorn
-CMD ["gunicorn", "AFDash.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "AFDash.wsgi:application", "--bind", "0.0.0.0:8001"]
