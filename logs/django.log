@@ -1,1 +1,20 @@
 [2025-07-01 15:24:52,258] WARNING django.request - Not Found: /favicon.ico
+[2025-07-02 10:38:41,272] WARNING django.request - Not Found: /favicon.ico
+[2025-07-02 11:33:12,149] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-02 11:38:36,181] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-03 11:53:04,107] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-03 11:59:10,921] ERROR django.request - Internal Server Error: /
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.10/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/app/dashboard/views.py", line 74, in home_view
+    daily_series, daily_categories = get_daily_series(payment_types, today)
+  File "/app/dashboard/utils.py", line 95, in get_daily_series
+    categories = [(today + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
+  File "/app/dashboard/utils.py", line 95, in <listcomp>
+    categories = [(today + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
+TypeError: can only concatenate str (not "datetime.timedelta") to str
+[2025-07-03 11:59:11,140] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-03 12:02:01,613] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json

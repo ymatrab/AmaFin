@@ -33,23 +33,122 @@ def get_top_achats():
     )
 
 
+
+# def get_daily_series(payment_types, today):
+#     seven_days_later = today + timedelta(days=6)
+
+#     categories = [(today + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
+#     daily_data_by_type = {ptype: defaultdict(float) for ptype in payment_types}
+
+#     for ptype in payment_types:
+#         if ptype == 'courant':
+#             raw_achats = Achat.objects.filter(
+#                 date_debit__isnull=False,
+#                 date_debit__range=[ today, seven_days_later],
+#                 debit=False,
+#                 payment_type='courant'
+#             ).values('date_debit', 'montant_dhs')
+            
+#             for achat in raw_achats:
+#                 date_str = achat['date_debit'].strftime('%Y-%m-%d')
+#                 daily_data_by_type['courant'][date_str] += float(achat['montant_dhs'])
+
+#         elif ptype == 'finex':
+#             raw_achats = Achat.objects.filter(
+#                 date_echeance_finex__isnull=False,
+#                 date_echeance_finex__range=[today,seven_days_later],
+#                 statut_finex='exécute',
+#                 payment_type='finex'
+#             ).values('date_echeance_finex', 'montant_dhs')
+            
+#             for achat in raw_achats:
+#                 date_str = achat['date_echeance_finex'].strftime('%Y-%m-%d')
+#                 daily_data_by_type['finex'][date_str] += float(achat['montant_dhs'])
+
+#         elif ptype == 'effet':
+#             raw_achats = Achat.objects.filter(
+#                 date_echeance_effet__isnull=False,
+#                 date_echeance_effet__range=[today,seven_days_later],
+#                 debit=False,
+#                 payment_type='effet'
+#             ).values('date_echeance_effet', 'montant_dhs')
+            
+#             for achat in raw_achats:
+#                 date_str = achat['date_echeance_effet'].strftime('%Y-%m-%d')
+#                 daily_data_by_type['effet'][date_str] += float(achat['montant_dhs'])
+
+#     series = []
+#     for ptype in payment_types:
+#         data = [daily_data_by_type[ptype].get(day, 0) / 1_000_000 for day in categories]
+#         series.append({
+#             'name': ptype.capitalize(),
+#             'data': data
+#         })
+
+#     return series, categories
+
+
+from collections import defaultdict
+from datetime import timedelta
+
 def get_daily_series(payment_types, today):
-    seven_days_ago = today - timedelta(days=6)
+    categories = [(today + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
     daily_data_by_type = {ptype: defaultdict(float) for ptype in payment_types}
 
-    raw_achats = Achat.objects.filter(
-        date_debit__isnull=False,
-        date_debit__range=[seven_days_ago, today],
-        debit=False,
-        payment_type__in=payment_types
-    ).values('date_debit', 'montant_dhs', 'payment_type')
+    for ptype in payment_types:
+        for i in range(7):
+            current_day = today + timedelta(days=i)
+            day_str = current_day.strftime('%Y-%m-%d')
 
-    for achat in raw_achats:
-        date_str = achat['date_debit'].strftime('%Y-%m-%d')
-        ptype = achat['payment_type']
-        daily_data_by_type[ptype][date_str] += float(achat['montant_dhs'])
+            if ptype == 'courant':
+                if i == 0:  # today
+                    raw_achats = Achat.objects.filter(
+                        date_debit__isnull=False,
+                        date_debit__lte=current_day,
+                        debit=False,
+                        payment_type='courant'
+                    ).values('montant_dhs')
+                else:
+                    raw_achats = Achat.objects.filter(
+                        date_debit__isnull=False,
+                        date_debit=current_day,
+                        debit=False,
+                        payment_type='courant'
+                    ).values('montant_dhs')
 
-    categories = [(seven_days_ago + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
+            elif ptype == 'finex':
+                if i == 0:
+                    raw_achats = Achat.objects.filter(
+                        date_echeance_finex__isnull=False,
+                        date_echeance_finex__lte=current_day,
+                        statut_finex='exécute',
+                        payment_type='finex'
+                    ).values('montant_dhs')
+                else:
+                    raw_achats = Achat.objects.filter(
+                        date_echeance_finex=current_day,
+                        statut_finex='exécute',
+                        payment_type='finex'
+                    ).values('montant_dhs')
+
+            elif ptype == 'effet':
+                if i == 0:
+                    raw_achats = Achat.objects.filter(
+                        date_echeance_effet__isnull=False,
+                        date_echeance_effet__lte=current_day,
+                        debit=False,
+                        payment_type='effet'
+                    ).values('montant_dhs')
+                else:
+                    raw_achats = Achat.objects.filter(
+                        date_echeance_effet=current_day,
+                        debit=False,
+                        payment_type='effet'
+                    ).values('montant_dhs')
+
+            total = sum(float(achat['montant_dhs']) for achat in raw_achats)
+            daily_data_by_type[ptype][day_str] += total
+
     series = []
     for ptype in payment_types:
         data = [daily_data_by_type[ptype].get(day, 0) / 1_000_000 for day in categories]
@@ -57,6 +156,7 @@ def get_daily_series(payment_types, today):
             'name': ptype.capitalize(),
             'data': data
         })
+
     return series, categories
 
 
@@ -120,7 +220,17 @@ def get_finex_consumption_by_bank():
                 payment_type='finex',
                 banque=banque,
                 date_paiement_fournisseur__lte=today,
-                date_echeance_finex__gte=today
+                statut_finex='exécute'
+            )
+            .aggregate(total=Sum('montant_dhs'))['total'] or 0
+        )
+        montant_planifie =  (
+            Achat.objects
+            .filter(
+                payment_type='finex',
+                banque=banque,
+                date_paiement_fournisseur__lte=today,
+                statut_finex='planifie'
             )
             .aggregate(total=Sum('montant_dhs'))['total'] or 0
         )
@@ -128,6 +238,7 @@ def get_finex_consumption_by_bank():
         resultats.append({
             'banque': banque.banque,
             'montant_consomme': float(montant_consomme),
+            'montant_planifie': float(montant_planifie),
             'limit_finex': float(banque.limit_finex or 0)
         })
 

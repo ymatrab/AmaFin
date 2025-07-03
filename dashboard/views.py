@@ -59,9 +59,11 @@ from .utils import (
 )
 from .services import recalculate_table_if_needed
 
+from datetime import datetime
 
 def home_view(request):
     today = now().date()
+    #today = datetime.strptime("2025-07-05", "%Y-%m-%d").date()
     payment_types = ['courant', 'finex', 'effet']
 
     total_solde = get_total_solde(today)

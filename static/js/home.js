@@ -164,9 +164,10 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       series: [
         finexData[0].montant_consomme,
-        finexData[0].limit_finex - finexData[0].montant_consomme
+        finexData[0].montant_planifie,
+        finexData[0].limit_finex - finexData[0].montant_consomme - finexData[0].montant_planifie
       ],
-      labels: ['Consommé', 'Disponible'],
+      labels: ['Consommé', 'Planifié', 'Disponible'],
       title: {
         text: 'Finex',
         align: 'center',
@@ -180,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
           fontSize: '14px'
         }
       },
-      colors: ['#2ed8b6', '#feb019'],
+      colors: ['#56DFCF', '#FFB823','#FF3FF3'],
       legend: {
         position: 'bottom',
         labels: { colors: ['#000'] }
@@ -221,9 +222,10 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       series: [
         finexData[1].montant_consomme,
-        finexData[1].limit_finex - finexData[1].montant_consomme
+        finexData[1].montant_planifie,
+        finexData[1].limit_finex - finexData[1].montant_consomme - finexData[1].montant_planifie
       ],
-      labels: ['Consommé', 'Disponible'],
+      labels: ['Consommé','Planifié', 'Disponible'],
       title: {
         text: 'Finex',
         align: 'center',
@@ -237,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
           fontSize: '14px'
         }
       },
-      colors: ['#2ed8b6', '#4680ff'],
+      colors: ['#ED3500', '#FFA673','#687FE5'],
       legend: {
         position: 'bottom',
         labels: { colors: ['#000'] }

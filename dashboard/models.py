@@ -224,7 +224,7 @@ class Achat(models.Model):
                 ).order_by('-date').first() 
 
                 if fx:
-                    self.montant_dhs=self.montant * fx.rate_actual
+                    self.montant_dhs=(self.montant+self.interet) * fx.rate_actual
                     self.refinancement_type = fx.refinancement_type
                     self.percent_3m = fx.percent_3m
                     self.value_adjusted = fx.value_adjusted
