@@ -34,7 +34,7 @@ body{
 }
 
 .bg-c-blue {
-    background-color: #4099ff;
+    background-color: rgba(0, 123, 255, 0.9);
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
 }
 .bg-c-purple {
@@ -46,14 +46,18 @@ body{
     background-color: #2ed8b6;
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
 }
+.bg-c-gris {
+    background-color: rgba(100, 100, 100, 0.6);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
+}
 
 .bg-c-yellow {
-    background-color: #ffb64d;
+    background-color: rgba(255, 166, 0, 0.9);
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
 }
 
 .bg-c-red {
-    background-color: #ff5370;
+    background-color: rgba(255, 76, 76, 1);
     box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .05), inset 0 -1px 0 rgba(0, 0, 0, .1);
 }
 

@@ -18,3 +18,12 @@ Traceback (most recent call last):
 TypeError: can only concatenate str (not "datetime.timedelta") to str
 [2025-07-03 11:59:11,140] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
 [2025-07-03 12:02:01,613] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 10:31:59,666] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 10:37:24,199] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 11:27:48,025] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 11:29:31,567] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 11:32:23,839] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 11:36:57,889] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 11:39:42,029] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 13:55:04,802] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[2025-07-04 13:56:06,211] WARNING django.request - Not Found: /.well-known/appspecific/com.chrome.devtools.json

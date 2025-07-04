@@ -1,10 +1,6 @@
 from django.db.models import Sum
-from django.utils.timezone import now
-from django.db.models.functions import TruncWeek
 from collections import defaultdict
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from .models import Achat, Solde, Income, Escompte, Bank
 
 
@@ -161,49 +157,57 @@ def get_daily_series(payment_types, today):
 
 
 def get_weekly_series(payment_types, today):
-    
-    today = now().date()
-    # Ancrer le début sur le lundi de la semaine actuelle moins 17 semaines
+    if isinstance(today, str):
+        today = datetime.strptime(today, "%Y-%m-%d").date()
+
+    # 🔁 4 semaines avant + semaine actuelle + 13 semaines après = 18 semaines
     start_of_current_week = today - timedelta(days=today.weekday())
-    first_week_start = start_of_current_week  - timedelta(weeks=4)
+    week_starts = [(start_of_current_week - timedelta(weeks=4)) + timedelta(weeks=i) for i in range(18)]
+    week_labels = [d.strftime('%Y-%m-%d') for d in week_starts]
 
-    
-    achats_hebdomadaires_bruts = (
-        Achat.objects
-        .filter(
-            date_debit__isnull=False,
-            date_debit__gte=first_week_start,
-            debit=False,
-            payment_type__in=payment_types
-        )
-        .annotate(week=TruncWeek('date_debit'))
-        .values('week', 'payment_type')
-        .annotate(total_hebdo=Sum('montant_dhs'))
-        .order_by('week')
-    )
+    data_par_type = {ptype: defaultdict(float) for ptype in payment_types}
 
-    # 🗓️ On utilise directement les dates des lundis comme étiquettes
-    weeks_labels = [(first_week_start + timedelta(weeks=i)).strftime('%Y-%m-%d') for i in range(18)]
-    
-    data_par_type_hebdo = {ptype: {week: 0.0 for week in weeks_labels} for ptype in payment_types}
-
-    for item in achats_hebdomadaires_bruts:
-        # 🔄 Convertit la semaine (datetime) en string de date (lundi)
-        semaine = item['week'].strftime('%Y-%m-%d')
-        type_paiement = item['payment_type']
-        montant = float(item['total_hebdo'])
-        data_par_type_hebdo[type_paiement][semaine] += montant
-
-    series_hebdomadaires = []
     for ptype in payment_types:
-        valeurs = [data_par_type_hebdo[ptype][week] / 1_000_000 for week in weeks_labels]
-        series_hebdomadaires.append({
+        for i, week_start in enumerate(week_starts):
+            week_end = week_start + timedelta(days=6)  # fin de la semaine (dimanche)
+            week_label = week_start.strftime('%Y-%m-%d')
+
+            if ptype == 'courant':
+                raw_achats = Achat.objects.filter(
+                    date_debit__isnull=False,
+                    date_debit__range=[week_start, week_end],
+                    debit=False,
+                    payment_type='courant'
+                ).values('montant_dhs')
+
+            elif ptype == 'finex':
+                raw_achats = Achat.objects.filter(
+                    date_echeance_finex__isnull=False,
+                    date_echeance_finex__range=[week_start, week_end],
+                    statut_finex='exécute',
+                    payment_type='finex'
+                ).values('montant_dhs')
+
+            elif ptype == 'effet':
+                raw_achats = Achat.objects.filter(
+                    date_echeance_effet__isnull=False,
+                    date_echeance_effet__range=[week_start, week_end],
+                    debit=False,
+                    payment_type='effet'
+                ).values('montant_dhs')
+
+            total = sum(float(achat['montant_dhs']) for achat in raw_achats)
+            data_par_type[ptype][week_label] += total
+
+    series = []
+    for ptype in payment_types:
+        data = [data_par_type[ptype].get(label, 0) / 1_000_000 for label in week_labels]
+        series.append({
             'name': ptype.capitalize(),
-            'data': valeurs
+            'data': data
         })
 
-    return series_hebdomadaires, weeks_labels
-
+    return series, week_labels
 
 
 
