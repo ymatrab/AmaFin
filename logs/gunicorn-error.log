@@ -678,3 +678,14 @@
 [2025-07-04 14:30:54 +0000] [7] [INFO] Booting worker with pid: 7
 [2025-07-04 14:30:54 +0000] [8] [INFO] Booting worker with pid: 8
 [2025-07-04 14:30:55 +0000] [9] [INFO] Booting worker with pid: 9
+[2025-07-04 14:31:51 +0000] [1] [INFO] Handling signal: term
+[2025-07-04 14:31:51 +0000] [9] [INFO] Worker exiting (pid: 9)
+[2025-07-04 14:31:51 +0000] [7] [INFO] Worker exiting (pid: 7)
+[2025-07-04 14:31:51 +0000] [8] [INFO] Worker exiting (pid: 8)
+[2025-07-04 14:31:51 +0000] [1] [INFO] Shutting down: Master
+[2025-07-04 14:32:02 +0000] [1] [INFO] Starting gunicorn 23.0.0
+[2025-07-04 14:32:02 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+[2025-07-04 14:32:02 +0000] [1] [INFO] Using worker: sync
+[2025-07-04 14:32:02 +0000] [7] [INFO] Booting worker with pid: 7
+[2025-07-04 14:32:02 +0000] [8] [INFO] Booting worker with pid: 8
+[2025-07-04 14:32:02 +0000] [9] [INFO] Booting worker with pid: 9
